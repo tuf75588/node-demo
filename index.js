@@ -2,33 +2,33 @@
 
 const { spawn } = require('child_process');
 
-const directoryName = process.argv[2];
-if (!directoryName || directoryName.match(/[<>:"\/\\|?*\x00-\x1F]/)) {
+const name = process.argv[2];
+if (!name || name.match(/[<>:"\/\\|?*\x00-\x1F]/)) {
   return console.log(`
   Invalid directory name.
-  Usage: create-dmw-template name-of-project  
+  Usage: create-express-api name-of-api  
 `);
 }
 
-const remoteURL = 'https://dev.azure.com/dmw-digital/experience-health/_git/emails';
+const repoURL = 'https://github.com/w3cj/express-api-starter.git';
 
-runCliCommand('git', ['clone', remoteURL, directoryName])
+runCommand('git', ['clone', repoURL, name])
   .then(() => {
-    return runCliCommand('rm', ['-rf', `${directoryName}/.git`]);
+    return runCommand('rm', ['-rf', `${name}/.git`]);
   }).then(() => {
     console.log('Installing dependencies...');
-    return runCliCommand('npm', ['install'], {
-      cwd: process.cwd() + '/' + directoryName
+    return runCommand('npm', ['install'], {
+      cwd: process.cwd() + '/' + name
     });
   }).then(() => {
-    console.log('Installed!');
+    console.log('Done! 🏁');
     console.log('');
     console.log('To get started:');
-    console.log('cd', directoryName);
-    console.log('npm run start');
+    console.log('cd', name);
+    console.log('npm run dev');
   });
 
-function runCliCommand(command, args, options = undefined) {
+function runCommand(command, args, options = undefined) {
   const spawned = spawn(command, args, options);
 
   return new Promise((resolve) => {
